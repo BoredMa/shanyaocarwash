@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <com.example.titlelayout.TitleLayout 
+        android:id="@+id/addcar_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ></com.example.titlelayout.TitleLayout>
+
+    <RelativeLayout
+        android:id="@+id/addcar_top"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/addcar_title"
+    	android:layout_marginLeft="100dp"
+        >
+<!--  
+        <TextView
+            android:id="@+id/addcar_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="点击添加图片"
+            android:textColor="@color/black" />
+-->
+        <ImageView
+            android:id="@+id/addcar_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="34dp"
+            android:src="@drawable/camera" />
+
+    </RelativeLayout>
+    
+    <ImageView 
+        android:id="@+id/addcar_divided_line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/divided_line"
+        android:layout_below="@id/addcar_top"
+        android:layout_marginTop="15dp"
+        />
+    
+    <RelativeLayout
+        android:id="@+id/addcar_content1"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/addcar_divided_line1"
+    	android:layout_marginTop="15dp"
+        >
+        <ImageView 
+            android:id="@+id/addcar_content1_image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_plate"
+            />
+        <TextView 
+            android:id="@+id/addcar_content1_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车牌"
+            android:layout_toRightOf="@id/addcar_content1_image1"
+            android:layout_marginTop="5dp"
+            />
+        <EditText 
+            android:id="@+id/addcar_content1_edit"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/addcar_content1_title"
+            android:layout_alignBottom="@id/addcar_content1_title"
+            android:layout_marginLeft="15dp"
+            android:textSize="14sp"
+            android:background="@null"
+            />
+        <ImageView 
+            android:id="@+id/addcar_content1_image2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_edit_info"
+            android:layout_toRightOf="@id/addcar_content1_edit"
+            />
+    </RelativeLayout>
+    
+    <ImageView 
+        android:id="@+id/addcar_divided_line2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/divided_line"
+        android:layout_below="@id/addcar_content1"
+        android:layout_marginTop="10dp"
+        />
+    
+        <RelativeLayout
+        android:id="@+id/addcar_content2"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/addcar_divided_line2"
+    	android:layout_marginTop="15dp"
+        >
+        <ImageView 
+            android:id="@+id/addcar_content2_image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/frcar"
+            />
+        <TextView 
+            android:id="@+id/addcar_content2_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车型"
+            android:layout_toRightOf="@id/addcar_content2_image1"
+            android:layout_marginTop="5dp"
+            />
+        <EditText 
+            android:id="@+id/addcar_content2_edit"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/addcar_content2_title"
+            android:layout_alignBottom="@id/addcar_content2_title"
+            android:layout_marginLeft="15dp"
+            android:textSize="14sp"
+            android:background="@null"
+            />
+        <ImageView 
+            android:id="@+id/addcar_content2_image2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_edit_info"
+            android:layout_toRightOf="@id/addcar_content2_edit"
+            />
+    </RelativeLayout>
+    
+    <ImageView 
+        android:id="@+id/addcar_divided_line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/divided_line"
+        android:layout_below="@id/addcar_content2"
+        android:layout_marginTop="10dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/addcar_content3"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/addcar_divided_line3"
+    	android:layout_marginTop="15dp"
+        >
+        <ImageView 
+            android:id="@+id/addcar_content3_image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_colour"
+            />
+        <TextView 
+            android:id="@+id/addcar_content3_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="颜色"
+            android:layout_toRightOf="@id/addcar_content3_image1"
+            android:layout_marginTop="5dp"
+            />
+        <EditText 
+            android:id="@+id/addcar_content3_edit"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/addcar_content3_title"
+            android:layout_alignBottom="@id/addcar_content3_title"
+            android:layout_marginLeft="15dp"
+            android:textSize="14sp"
+            android:background="@null"
+            />
+        <ImageView 
+            android:id="@+id/addcar_content3_image2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_edit_info"
+            android:layout_toRightOf="@id/addcar_content3_edit"
+            />
+    </RelativeLayout>
+    
+    <ImageView 
+        android:id="@+id/addcar_divided_line4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/divided_line"
+        android:layout_below="@id/addcar_content3"
+        android:layout_marginTop="10dp"
+        />
+
+		<Button
+		    android:id="@+id/ensure_addcar"
+		    android:layout_width="200dp"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/addcar_divided_line4"
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginTop="15dp"
+		    android:background="@drawable/recharge_conf"
+		    android:text="确定"
+		    android:textColor="@color/white"
+		    android:enabled="false" />
+
+		<TextView
+		    android:id="@+id/addcar_warning"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/ensure_addcar"
+		    android:layout_marginTop="20dp"
+		    android:gravity="center"
+		    android:text="请如实完善车辆信息，若因信息有误引起的事件,本店概不负责！"
+		    android:textSize="10sp" />
+</RelativeLayout>

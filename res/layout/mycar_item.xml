@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     >
+
+    <ImageView 
+        android:id="@+id/mycar_photo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        />
+
+    <LinearLayout
+        android:id="@+id/details" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:layout_toRightOf="@id/mycar_photo"
+        >
+            <TableLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <TableRow >
+                    <TextView 
+                        android:layout_height="wrap_content"
+                        android:text="品牌:"
+                        android:textColor="@color/lightblue"
+                        android:textSize="18sp"
+                        />
+                    <TextView 
+                        android:id="@+id/car_brand"
+                        android:layout_height="wrap_content"
+                        android:text="比亚迪"
+                        android:textColor="@color/gray"
+                        android:textSize="18sp"
+                        />
+                </TableRow>
+                <TableRow >
+                    <TextView 
+                        android:layout_height="wrap_content"
+                        android:text="车牌:"
+                        android:textColor="@color/lightblue"
+                        android:textSize="18sp"
+                        />
+                    <TextView 
+                        android:id="@+id/plate_num"
+                        android:layout_height="wrap_content"
+                        android:text="湘A62677"
+                        android:textColor="@color/gray"
+                        android:textSize="18sp"
+                        />
+                </TableRow>
+                <TableRow >
+                    <TextView 
+                        android:layout_height="wrap_content"
+                        android:text="颜色:"
+                        android:textColor="@color/lightblue"
+                        android:textSize="18sp"
+                        />
+                    <TextView 
+                        android:id="@+id/car_color"
+                        android:layout_height="wrap_content"
+                        android:text="黑色"
+                        android:textColor="@color/gray"
+                        android:textSize="18sp"
+                        />
+                </TableRow>
+            </TableLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/ensure_wash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rc_btn_voice_normal"
+        android:text="确认洗车"
+        android:textColor="@color/green" 
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="13dp"
+        android:focusable="false"
+        />
+
+</RelativeLayout>

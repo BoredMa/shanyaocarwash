@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <com.example.titlelayout.TitleLayout 
+        android:id="@+id/login_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ></com.example.titlelayout.TitleLayout>
+
+    <TextView
+        android:id="@+id/promise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="闪耀汽车美容承诺严格保密车主隐私"
+        android:textColor="@color/gray" />
+    
+    <LinearLayout 
+        android:id="@+id/login_input_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/promise"
+        android:layout_margin="10dp"
+        android:background="@drawable/white_bg"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/icon_phone"
+             />
+        <EditText 
+            android:id="@+id/input_phone"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="1"
+        	android:hint="手机号"
+        	android:background="@null"
+        	android:inputType="number"
+            />
+    </LinearLayout>
+    
+    <Button 
+        android:id="@+id/get_verification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="获取验证码"
+        android:enabled="false"
+        android:layout_below="@id/login_input_phone"
+        android:layout_margin="10dp"
+        />
+    <LinearLayout 
+        android:id="@+id/verification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/get_verification"
+        >
+	    <LinearLayout 
+	        android:id="@+id/login_input_verify"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:background="@drawable/white_bg"
+	        android:orientation="horizontal"
+	        android:layout_margin="10dp"
+	        >
+	        <ImageView
+	            android:layout_width="20dp"
+	        	android:layout_height="20dp"
+	        	android:src="@drawable/icon_code"
+	             />
+	        <EditText 
+	            android:id="@+id/input_verify"
+	            android:layout_width="0dp"
+	        	android:layout_height="wrap_content"
+	        	android:layout_weight="1"
+	        	android:hint="验证码"
+	        	android:background="@null"
+	        	android:inputType="number"
+	            />
+	    </LinearLayout>
+	    <Button 
+	       	android:id="@+id/login"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="确认"
+	        android:enabled="false" 
+	        />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/verification"
+        android:layout_marginTop="18dp"
+        android:autoLink="all"
+        android:text="新用户注册" />
+
+</RelativeLayout>

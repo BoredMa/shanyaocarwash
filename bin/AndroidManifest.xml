@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.shanyaocarwash"
+    android:versionCode="1"
+    android:versionName="1.0" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	
+	
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="21" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/my_theme" android:enabled="true">
+        <activity
+            android:name="com.example.login.LoginFilter"
+            android:label="闪耀汽车美容"
+             >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity 
+            android:name="com.example.login.Login"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.login.Register"
+            > 
+        </activity>
+        <activity
+            android:name="com.example.shanyaocarwash.MainActivity"
+            android:logo="@drawable/icon_my_on"
+        	android:label="@string/label"
+             >
+        </activity>
+        <activity 
+            android:name="com.example.recharge.Recharge"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.clientservice.RechargeService"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.clientservice.RechargeServiceContact"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.clientservice.RechargeUnarrive"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.clientservice.RechargeWrongNum"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.addmycar.AddCarActivity"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.addmycar.EditMyCar"
+            > 
+        </activity>
+        <activity 
+            android:name="com.example.slidingmenu.NormalQs"
+            > 
+        </activity>
+    </application>
+
+</manifest>

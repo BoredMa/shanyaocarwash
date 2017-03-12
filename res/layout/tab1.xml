@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    xmlns:android="http://schemas.android.com/apk/res/android">
+	<com.example.fragments.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewflipper_scrollview"
+        android:scrollbars="none"
+        android:focusable="false">
+	    <ViewFlipper
+            android:id="@+id/mViewFliper_vf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+				            <LinearLayout 
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content">
+				        <ImageView 
+				            android:id="@+id/show_pic_1"
+				            android:layout_width="match_parent"
+				            android:layout_height="160dip"
+				            android:scaleType="fitXY"
+				            android:background="@drawable/default_pic_1"/>
+				    </LinearLayout>
+				      <LinearLayout 
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:orientation="vertical">
+				        <ImageView 
+				            android:id="@+id/show_pic_2"
+				            android:layout_width="match_parent"
+				            android:layout_height="160dip"
+				            android:scaleType="fitXY"
+				            android:background="@drawable/default_pic_2"/>
+				    </LinearLayout>
+				      <LinearLayout 
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:orientation="vertical">
+				        <ImageView 
+				            android:id="@+id/show_pic_3"
+				            android:layout_width="match_parent"
+				            android:layout_height="160dip"
+				            android:scaleType="fitXY"
+				            android:background="@drawable/default_pic_3"/>
+				    </LinearLayout>
+				      <LinearLayout 
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:orientation="vertical">
+				        <ImageView 
+				            android:id="@+id/show_pic_4"
+				            android:layout_width="match_parent"
+				            android:layout_height="160dip"
+				            android:scaleType="fitXY"
+				            android:background="@drawable/default_pic_4"/>
+				    </LinearLayout>
+
+        </ViewFlipper>
+	</com.example.fragments.MyScrollView>
+    
+        
+    <LinearLayout
+        android:id="@+id/home_date_ratio_ly" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewflipper_scrollview">
+         	<include  layout="@layout/home_ratio_img"/>  
+        </LinearLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/weather_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/home_date_ratio_ly"
+        android:layout_margin="20dp"
+        >
+        <TextView 
+            android:id="@+id/show_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/price_tag_layout" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_layout"
+        android:orientation="horizontal"
+        >
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="办卡价格(20次):"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:id="@+id/card_price" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="130dp"
+            android:gravity="center"
+            android:text="500元"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
+    <ImageView 
+        android:id="@+id/dividedLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/divided_line"
+        android:layout_below="@id/price_tag_layout"
+        />
+    <RelativeLayout
+        android:id="@+id/account_table_layout" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dividedLine"
+        android:layout_marginTop="15dp"
+        >
+        <TableLayout
+	    android:id="@+id/account_table"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+		
+		>
+		    <TableRow >
+		        <TextView 
+		            android:layout_height="wrap_content"
+		            android:text="已洗次数(次):"
+		            android:textSize="20sp"
+		            />
+		        <TextView 
+		            android:id="@+id/washed_num"
+		            android:layout_height="wrap_content"
+		            android:paddingLeft="150dp"
+		            android:text="6"
+		            android:textSize="20sp"
+		            />
+		    </TableRow>
+		    
+		    <TableRow >
+		        <TextView 
+		            android:layout_height="wrap_content"
+		            android:text="剩余次数(次):"
+		            android:textSize="20sp"
+		            />
+		        <TextView 
+		            android:id="@+id/remaining_num"
+		            android:layout_height="wrap_content"
+		            android:paddingLeft="150dp"
+		            android:text="14"
+		            android:textSize="20sp"
+		            />
+		    </TableRow>
+		    
+		    <TableRow >
+		        <TextView 
+		            android:layout_height="wrap_content"
+		            android:text="余额(元):"
+		            android:textSize="20sp"
+		            />
+		        <TextView 
+		            android:id="@+id/remainings"
+		            android:layout_height="wrap_content"
+		            android:paddingLeft="150dp"
+		            android:text="150"
+		            android:textSize="20sp"
+		            />
+		    </TableRow>
+	</TableLayout>
+	
+        <Button
+	    android:id="@+id/recharge_card"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/account_table"
+	    android:layout_marginLeft="23dp"
+	    android:layout_marginTop="48dp"
+	    android:background="@drawable/rc_btn_voice_normal"
+	    android:text="充卡(20次)"
+	    android:textColor="@color/green"
+	    android:textSize="20sp" />
+        
+	<Button 
+        android:id="@+id/recharge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/recharge_card"
+        android:layout_alignBottom="@id/recharge_card"
+        android:layout_marginLeft="70dp"
+        android:background="@drawable/rc_btn_voice_normal"
+        android:text="充值"
+        android:textSize="20sp"
+        android:textColor="@color/green"
+        />
+
+	
+
+    </RelativeLayout>
+	
+</RelativeLayout>

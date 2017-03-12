@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <com.example.titlelayout.TitleLayout 
+        android:id="@+id/register_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ></com.example.titlelayout.TitleLayout>
+
+    <TextView
+        android:id="@+id/register_promise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="闪耀汽车美容承诺严格保密车主隐私"
+        android:textColor="@color/gray" />
+    
+    <LinearLayout 
+        android:id="@+id/register_input_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_promise"
+        android:layout_margin="10dp"
+        android:background="@drawable/white_bg"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/icon_phone"
+             />
+        <EditText 
+            android:id="@+id/input_phone"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="1"
+        	android:hint="手机号"
+        	android:background="@null"
+        	android:inputType="number"
+            />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/register_input_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_input_phone"
+        android:layout_margin="10dp"
+        android:background="@drawable/white_bg"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/icon_cell"
+             />
+        <EditText 
+            android:id="@+id/input_name"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="1"
+        	android:hint="姓名"
+        	android:background="@null"
+        	android:inputType="textAutoCorrect"
+            />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/register_input_old"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_input_name"
+        android:layout_margin="10dp"
+        android:background="@drawable/white_bg"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/icon_code"
+             />
+        <EditText 
+            android:id="@+id/input_age"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="1"
+        	android:hint="年龄"
+        	android:background="@null"
+        	android:inputType="number"
+            />
+    </LinearLayout>
+
+   <RadioGroup 
+		android:id="@+id/sex"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:layout_below="@id/register_input_old"> 
+		<RadioButton 
+			android:id="@+id/male"
+			android:layout_marginLeft="50dp"
+			android:text="男"/>
+
+		<RadioButton
+		    android:id="@+id/female"
+		    android:layout_marginLeft="90dp"
+		    android:text="女" />
+ 
+	</RadioGroup> 
+
+   
+    
+    <Button 
+        android:id="@+id/register_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确认注册"
+        android:enabled="false"
+        android:layout_below="@id/sex"
+        android:layout_margin="10dp"
+        />
+
+</RelativeLayout>
