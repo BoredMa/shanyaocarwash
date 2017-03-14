@@ -56,6 +56,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 
 
 import android.view.KeyEvent;
@@ -399,6 +400,7 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 		
 		
 //		mAdapter = new MyFragmentPagerAdapter(fm);
+		
 		//获取位置
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		//初始化位置监听器
@@ -439,10 +441,10 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 				try{
 					//组装方向地理编码的接口地址
 					StringBuilder url = new StringBuilder();
-					url.append("http://maps.googleapis.com/maps/api/geocode/json?latlng=");
+					url.append("http://api.map.baidu.com/geocoder/v2/?ak=1zRdWKMlg969mgHyvOP60X1uCWGu50RO&location=");
 					url.append(location.getLatitude()).append(",");
 					url.append(location.getLongitude());
-					url.append("&sensor=false");
+					url.append("&output=json&pois=0&mcode=6F:D8:B9:0D:28:3B:C9:45:E5:22:EA:E9:74:D6:FD:30:13:85:A1:80;com.example.shanyaocarwash");
 					HttpClient httpClient = new DefaultHttpClient();
 					HttpGet httpGet = new HttpGet(url.toString());
 					httpGet.addHeader("Accept_Language","zh-CN");
@@ -452,14 +454,13 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 						String response = EntityUtils.toString(entity,"utf-8");
 						JSONObject jsonObject = new JSONObject(response);
 						//获取results节点下的位置信息
-						JSONArray resultArray = jsonObject.getJSONArray("results");
-						if(resultArray.length() > 0){
-							JSONObject subObject = resultArray.getJSONObject(0);
-							//取出格式化后的位置信息
-							String address = subObject.getString("formatted_address");
+						String cityName = jsonObject.getJSONObject("result")
+								.getJSONObject("addressComponent").getString("city");
+
+						if(!TextUtils.isEmpty(cityName)){
 							Message message = new Message();
 							message.what = SHOW_LOCATION;
-							message.obj = address;
+							message.obj = cityName;
 							Locationhandler.sendMessage(message);
 						}
 					}
@@ -595,6 +596,10 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 			}
 		}
 	}
+	
+	
+	
+	
 	private Handler handler = new Handler() {
 
 		@Override

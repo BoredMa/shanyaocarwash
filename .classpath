@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="H:/EclipsesWorkSpaces/ShanYaoCarWash/libs/gson-2.8.0.jar"/>
 	<classpathentry kind="lib" path="H:/EclipsesWorkSpaces/ShanYaoCarWash/libs/afinal_0.5.1_bin.jar"/>
+	<classpathentry kind="lib" path="H:/EclipsesWorkSpaces/ShanYaoCarWash/libs/BaiduLBS_Android.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

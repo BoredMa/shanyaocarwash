@@ -191,21 +191,12 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 	        
 	        //此处显示天气情况，目前是先显示位置信息
 	        mLocation = (TextView) v.findViewById(R.id.show_location);
-	        List<String> providerList = MainActivity.locationManager.getProviders(true);
-	        if(providerList.contains(LocationManager.GPS_PROVIDER)){
-	        	provider = LocationManager.GPS_PROVIDER;
-	        }else if(providerList.contains(LocationManager.NETWORK_PROVIDER)){
-	        	provider = LocationManager.NETWORK_PROVIDER;
-	        }else{
-	        	Toast.makeText(getActivity(), "当前不可定位", Toast.LENGTH_SHORT).show();	        	
-	        }
-	        if(provider != null){
-	        	Location location = MainActivity.locationManager.getLastKnownLocation(provider);
-	        	if(location != null){
-	        		MainActivity.showLocation(location);
-	        	}
-	        	MainActivity.locationManager.requestLocationUpdates(provider, 5000, 3, MainActivity.locationListener);
-	        }
+	        
+	        //在线程中更新天气
+	        Weather weather = new Weather();
+			new Thread(weather).start();
+	        
+	       
 	}
 
 	 private void displayRatio_selelct(View v,int id){
@@ -512,4 +503,30 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
     	
     };
 
+    class Weather implements Runnable {
+		
+		@Override
+		public void run() {
+				try {
+					List<String> providerList = MainActivity.locationManager.getProviders(true);
+			        if(providerList.contains(LocationManager.GPS_PROVIDER)){
+			        	provider = LocationManager.GPS_PROVIDER;
+			        }else if(providerList.contains(LocationManager.NETWORK_PROVIDER)){
+			        	provider = LocationManager.NETWORK_PROVIDER;
+			        }else{
+			        	Toast.makeText(getActivity(), "当前不可定位", Toast.LENGTH_SHORT).show();	        	
+			        }
+			        if(provider != null){
+			        	Location location = MainActivity.locationManager.getLastKnownLocation(provider);
+			        	if(location != null){
+			        		MainActivity.showLocation(location);
+			        	}
+			        	MainActivity.locationManager.requestLocationUpdates(provider, 5000, 3, MainActivity.locationListener);
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}		
+	}
+    
 }
