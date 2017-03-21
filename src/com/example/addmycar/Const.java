@@ -23,4 +23,6 @@ public class Const {
 	
 	public static final String REQUEST_URL = URL_PREFIX+"/ExecuteEvents";
 	
+	public static final String NEWS_URL = URL_PREFIX+"/pushNews/news.xml";
+	
 }

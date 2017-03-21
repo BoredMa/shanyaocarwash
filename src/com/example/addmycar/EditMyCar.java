@@ -8,6 +8,7 @@ import net.tsz.afinal.FinalBitmap;
 
 import com.example.bottommenu.BottomMenu;
 import com.example.bottommenu.ShowBottomMenu;
+import com.example.login.Login;
 import com.example.shanyaocarwash.R;
 import com.example.web.WebServicePost;
 
@@ -306,11 +307,10 @@ public class EditMyCar extends Activity {
 		                    case Dialog.BUTTON_POSITIVE:  
 		                       if(isPicModified()){
 		                    	   editCar();
-		                       }else if(isDataModified()){
+		                       }else if(isDataModified() && Login.isPlateNo(pn)){
 		                    	   editCarData();
 		                       }else{
-		                    	   Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
-		                    	   finish();
+		                    	   Toast.makeText(EditMyCar.this, "修改失败，检查车牌等格式是否正确", Toast.LENGTH_SHORT).show();
 		                       }  
 		                        break;  
 		                    case Dialog.BUTTON_NEGATIVE:  

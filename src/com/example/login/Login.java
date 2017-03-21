@@ -298,6 +298,15 @@ public class Login extends Activity {
 			return mobiles.matches(telRegex);
 		}
 	}
+	
+	public static boolean isPlateNo(String plateNum){
+		String plateRegex = "^[京津渝沪冀晋辽吉黑苏浙皖闽赣鲁豫鄂湘粤琼川贵云陕甘青台宁新藏港澳]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$";
+		if(TextUtils.isEmpty(plateNum)){
+			return false;
+		}else{
+			return plateNum.matches(plateRegex);
+		}
+	}
 
 	/**
 	 * 发送短信验证码
@@ -367,8 +376,10 @@ public class Login extends Activity {
 					int arg3) {
 				if (inputNum.getText().toString().length() > 0) {
 					getVerify_bt.setEnabled(true);
+					getVerify_bt.setBackgroundResource(R.drawable.recharge_conf_normal);
 				} else {
 					getVerify_bt.setEnabled(false);
+					getVerify_bt.setBackgroundResource(R.drawable.recharge_conf);
 				}
 			}
 
@@ -393,8 +404,10 @@ public class Login extends Activity {
 					int arg3) {
 				if (inputVerify.getText().toString().length() > 0) {
 					login_bt.setEnabled(true);
+					login_bt.setBackgroundResource(R.drawable.recharge_conf_normal);
 				} else {
 					login_bt.setEnabled(false);
+					login_bt.setBackgroundResource(R.drawable.recharge_conf);
 				}
 			}
 
@@ -445,12 +458,14 @@ public class Login extends Activity {
 		public void onFinish() {// 计时完毕时触发
 			getVerify_bt.setText("重新发送验证码");
 			getVerify_bt.setEnabled(true);
+			getVerify_bt.setBackgroundResource(R.drawable.recharge_conf_normal);
 		}
 
 		@Override
 		public void onTick(long millisUntilFinished) {// 计时过程显示
 			getVerify_bt.setText((millisUntilFinished / 1000) + "后可重新发送验证码");
 			getVerify_bt.setEnabled(false);
+			getVerify_bt.setBackgroundResource(R.drawable.recharge_conf);
 		}
 	}
 

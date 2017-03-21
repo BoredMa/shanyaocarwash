@@ -64,7 +64,7 @@ public class Recharge extends Activity {
 //	private Button[] buttons = new Button[8];
 	private String[] prices = {"50","100","150","200"};
 //	private String[] descs = {"完善信息","20分","查看状态","(获得积分)","50.00","获得更多积分","改善用户体验","及时解决您的问题"};
-	private List<String> mList = new ArrayList<>();
+	private List<String> mList = new ArrayList<String>();
 	
 	private EditText chargeAccount;
 	
@@ -96,6 +96,14 @@ public class Recharge extends Activity {
 					int position, long id) {
 				clickedPrice = mList.get(position);
 				show_pr.setText(clickedPrice+"元");
+				 for(int i=0;i<parent.getCount();i++){
+		               View v=parent.getChildAt(i);
+		               if (position == i) {//当前选中的Item改变背景颜色
+		                view.setBackgroundResource(R.drawable.gridselectedstyle);		                
+		               } else {
+		                  v.setBackgroundResource(R.color.white);
+		               }
+		           }	
 			}
 		});
 	}

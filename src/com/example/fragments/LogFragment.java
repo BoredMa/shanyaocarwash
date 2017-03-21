@@ -119,7 +119,7 @@ public class LogFragment extends Fragment{
                 case XmlPullParser.START_TAG:  
 
                     if ("logs".equals(xParser.getName())) {  
-                        //new出一个news的对象  
+                        //new出一个logs的对象  
                         logs = new Logs();  
                     }  
                     else if ("detail".equals(xParser.getName())) {  

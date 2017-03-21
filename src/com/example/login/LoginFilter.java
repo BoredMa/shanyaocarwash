@@ -4,9 +4,14 @@ import java.util.HashMap;
 
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.addmycar.Const;
 import com.example.bean.User;
 import com.example.shanyaocarwash.MainActivity;
 import com.example.shanyaocarwash.R;
@@ -26,6 +31,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.Toast;
 
 public class LoginFilter extends Activity{
@@ -46,13 +52,19 @@ public class LoginFilter extends Activity{
 	
 	private User user;
 	
+	private Context that;
 	
+	public static boolean connected = false;
+	public static boolean lastConnected = false;
+	public static final int GET_CONNECTED = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
-		Judge();
-		finish();
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.loginfilter);
+		that = LoginFilter.this;
+		isConnectedToInternet();		
 	}
 
 	private void Judge() {
@@ -62,13 +74,45 @@ public class LoginFilter extends Activity{
 		phoneNum = pref.getString("phone", "");
 		if(logined){
 			sendGetInfoReq();
+			finish();
 		}else{
 			startActivity(new Intent(this,Login.class));
 			finish();
 		}
 	}
 
-
+	private void isConnectedToInternet() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try{
+					StringBuilder url = new StringBuilder();
+					url.append(Const.NEWS_URL);
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpGet httpGet = new HttpGet(url.toString());
+					httpGet.addHeader("Accept_Language","zh-CN");
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					if(httpResponse.getStatusLine().getStatusCode() == 200){
+						connected = true;
+					}else{
+						connected = false;
+					}
+					
+				}catch(Exception e){
+					e.printStackTrace();
+					connected = false;
+				}finally{
+					Message msg = new Message();
+					msg.what = GET_CONNECTED;
+					msg.obj = connected;
+					handler.sendMessage(msg);
+				}
+			  }
+			}).start();
+	}
+	
+	
 	private void sendGetInfoReq() {
 		new Thread(new Runnable() {
 			@Override
@@ -89,8 +133,7 @@ public class LoginFilter extends Activity{
 		}).start();	
 	}
 
-	private Handler handler = new Handler() {
-
+	private Handler handler = new Handler() { 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -109,10 +152,16 @@ public class LoginFilter extends Activity{
 					e.printStackTrace();
 				}
 				break;
+			case GET_CONNECTED:
+				if((boolean)msg.obj){					
+						Judge();
+				}else{
+					MainActivity.showNoInternetDialog(that);
+				}
+				break;
 			}
 		}
 
 	};
 	
-
 }

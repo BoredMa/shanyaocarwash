@@ -8,6 +8,8 @@ import com.example.addmycar.AddCarActivity;
 import com.example.bean.User;
 import com.example.bottommenu.ShowBottomMenu;
 import com.example.login.Login;
+import com.example.newslist.News;
+import com.example.newslist.NewsAdapter;
 import com.example.shanyaocarwash.R;
 import com.example.shanyaocarwash.SlidingMenuActivity_4;
 import com.example.slidingmenu.NormalQs;
@@ -23,16 +25,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SlidingMenuFragment extends ListFragment {
+public class SlidingMenuFragment extends Fragment{
 
 	private Button logOut;
 	
@@ -47,6 +52,10 @@ public class SlidingMenuFragment extends ListFragment {
 	
 	private SharedPreferences pref;
 	private SharedPreferences.Editor editor;
+	
+	private ListView listView;
+
+	
 	
 	public SlidingMenuFragment(User user) {
 		userPhone = user.getPhone();
@@ -72,6 +81,34 @@ public class SlidingMenuFragment extends ListFragment {
 		logOut = (Button) view.findViewById(R.id.log_out);
 		pref = this.getActivity().getSharedPreferences("shanyaodata", Context.MODE_PRIVATE);
 		
+		initSlidingMenu();
+		listView = (ListView) view.findViewById(R.id.list_view);
+		RowAdapter SlidingItemAdapter = new RowAdapter(getActivity(), 
+				R.layout.row,  slidingList);
+		
+		listView.setAdapter(SlidingItemAdapter);
+		listView.addHeaderView(new ViewStub(getActivity()));
+		listView.addFooterView(new ViewStub(getActivity()));
+		listView.setDividerHeight(2);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				switch (position) {
+				case 1:
+					startActivity(new Intent(getActivity(),NormalQs.class));
+					break;
+				case 2:
+					Toast.makeText(getActivity(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
+					break;
+				case 3:
+					ShowBottomMenu showBM = new ShowBottomMenu();
+					showBM.showButtonMenu(getActivity(),"weixinshare");
+					break;
+				}
+			}
+		});
 	}
 
 	private void setOnclick(View view) {
@@ -126,18 +163,7 @@ public class SlidingMenuFragment extends ListFragment {
 		return hName;
 	}
 	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		
-		initSlidingMenu();
-		
-		RowAdapter SlidingItemAdapter = new RowAdapter(getActivity(), 
-				R.layout.row,  slidingList);
-		
-		setListAdapter(SlidingItemAdapter);
-		
-	}
+
 
 	private void initSlidingMenu() {
 		SlidingItem common_problem = new SlidingItem("常见问题解答",R.drawable.icon_question);
@@ -148,22 +174,6 @@ public class SlidingMenuFragment extends ListFragment {
 		slidingList.add(wx_share);
 	}
 
-	@Override
-	public void onListItemClick(ListView lv, View v, int position, long id) {
-		Fragment newContent = null;
-		switch (position) {
-		case 0:
-			startActivity(new Intent(getActivity(),NormalQs.class));
-			break;
-		case 1:
-			Toast.makeText(getActivity(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
-			break;
-		case 2:
-			ShowBottomMenu showBM = new ShowBottomMenu();
-			showBM.showButtonMenu(getActivity(),"weixinshare");
-			break;
-		}
-	}
 
 	private void switchFragment(Fragment fragment) {
 		if (getActivity() == null)

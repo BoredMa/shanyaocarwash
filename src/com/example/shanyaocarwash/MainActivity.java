@@ -17,6 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.coolweather.app.service.AutoUpdateService;
+import com.coolweather.app.util.Utility;
+import com.example.addmycar.Const;
 import com.example.bean.User;
 import com.example.fragments.FrcarFragment;
 import com.example.fragments.LogFragment;
@@ -24,7 +27,9 @@ import com.example.fragments.MineFragment;
 import com.example.fragments.MyViewPager;
 import com.example.fragments.MycarFragment;
 import com.example.fragments.SlidingMenuFragment;
+import com.example.login.LoginFilter;
 
+import com.example.weather.Weather;
 import com.example.web.WebServicePost;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -33,6 +38,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ActionBar.Tab;
@@ -50,6 +56,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -73,6 +80,7 @@ import android.widget.TextView;
 
 
 public class MainActivity extends SlidingFragmentActivity implements  android.view.View.OnClickListener, TabListener {
+	public static Context that;
 	//声明ActionBar
 	private ActionBar actionBar;
 	private String[] titles = {"账户","我的爱车","帮朋友买单","洗车记录"};
@@ -128,6 +136,7 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 	
 	protected static final int GET_INFO = 2;
 	protected static final int SHOW_LOCATION = 0;
+
 	
 	
 	private boolean[] fragmentsUpdateFlag = { false, false, false, false };
@@ -144,6 +153,9 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 	
 	public static LocationListener locationListener; 
 	
+	public static String currentPosition;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -153,8 +165,67 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 		initViews();//初始化控件
 		initEvents();//初始化事件
 		initDatas();//初始化数据
-		Timer timer = new Timer();
-		new Thread(timer).start();
+		//判断目前客户端是否有网络连接
+		//如果没有网络连接，弹出一个dialog
+		isConnectedToInternet();
+		RefreshInternet ri = new RefreshInternet();
+		new Thread(ri).start();
+	}
+
+	private void isConnectedToInternet() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try{
+					StringBuilder url = new StringBuilder();
+					url.append(Const.NEWS_URL);
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpGet httpGet = new HttpGet(url.toString());
+					httpGet.addHeader("Accept_Language","zh-CN");
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					if(httpResponse.getStatusLine().getStatusCode() == 200){
+						LoginFilter.connected = true;
+					}else{
+						LoginFilter.connected = false;
+					}
+					
+				}catch(Exception e){
+					e.printStackTrace();
+					LoginFilter.connected = false;
+				}finally{
+					Message msg = new Message();
+					msg.what = LoginFilter.GET_CONNECTED;
+					msg.obj = LoginFilter.connected;
+					handler.sendMessage(msg);
+				}
+			  }
+			}).start();
+	}
+
+	public static void showNoInternetDialog(final Context context) {
+		 //先new出一个dialog监听
+        DialogInterface.OnClickListener dialogOnclicListener=new DialogInterface.OnClickListener(){  
+  
+            @Override  
+            public void onClick(DialogInterface dialog, int which) {  
+                switch(which){  
+                    case Dialog.BUTTON_POSITIVE:
+                        break;  
+                    case Dialog.BUTTON_NEGATIVE:  
+                        break;    
+                }  
+            }
+
+			
+        };  
+        //dialog属性设置
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+        builder.setTitle("提示"); //设置标题  
+        builder.setMessage("无可用网络,请确认已经连上网络?"); //设置信息  
+        builder.setPositiveButton("确认",dialogOnclicListener);  
+        builder.setNegativeButton("取消", dialogOnclicListener);   
+        builder.create().show();       
 	}
 
 	@Override 
@@ -381,6 +452,9 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 	}
 
 	private void initViews() {
+		
+		that = MainActivity.this;
+		
 		mViewPager = (MyViewPager) findViewById(R.id.tabpager);
 		
 		mTabMine = (LinearLayout) findViewById(R.id.id_tab_mine);
@@ -400,6 +474,7 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 		
 		
 //		mAdapter = new MyFragmentPagerAdapter(fm);
+		
 		
 		//获取位置
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -429,10 +504,15 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 				showLocation(location);
 			}
 		};
+		
+		//后台自动刷新天气信息
+		startService(new Intent(this,AutoUpdateService.class));
 	}
 
 	
 	
+	
+
 	public static void showLocation(final Location location) {
 		new Thread(new Runnable() {
 			
@@ -588,8 +668,10 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 			// TODO Auto-generated method stub
 			while (true) {
 				try {
-					Thread.sleep(5000);						
-					refreshTables();
+					Thread.sleep(30000);	
+					//如果有网络连接就刷新
+					if(LoginFilter.connected)
+						refreshTables();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -597,7 +679,47 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 		}
 	}
 	
-	
+	class RefreshInternet implements Runnable {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			while (true) {
+				try {
+					Thread.sleep(5000);	
+					//每隔5秒判断是否有网络连接
+					try{
+						StringBuilder url = new StringBuilder();
+						url.append(Const.NEWS_URL);
+						HttpClient httpClient = new DefaultHttpClient();
+						HttpGet httpGet = new HttpGet(url.toString());
+						httpGet.addHeader("Accept_Language","zh-CN");
+						HttpResponse httpResponse = httpClient.execute(httpGet);
+						if(httpResponse.getStatusLine().getStatusCode() == 200){
+							LoginFilter.connected = true;
+						}else{
+							LoginFilter.connected = false;
+						}
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						LoginFilter.connected = false;
+					}finally{
+						//判断是否是刚刚掉线，如果上次还有网，就弹出一个对话框。确保对话框只弹出一次
+						if(LoginFilter.lastConnected){
+							Message msg = new Message();
+							msg.what = LoginFilter.GET_CONNECTED;
+							msg.obj = LoginFilter.connected;
+							handler.sendMessage(msg);
+						}			
+						LoginFilter.lastConnected = LoginFilter.connected;
+					}					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	
 	private Handler handler = new Handler() {
@@ -619,6 +741,14 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 					fragmentsUpdateFlag[i] = true;		
 //				updateUi();
 				break;
+			case LoginFilter.GET_CONNECTED:
+				if(!(boolean)msg.obj){
+					showNoInternetDialog(that);
+				}else{
+					Timer timer = new Timer();
+					new Thread(timer).start();
+				} 
+				break;
 			}
 		}
 
@@ -631,8 +761,13 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case SHOW_LOCATION:
-				String currentPosition = (String) msg.obj;
-				MineFragment.mLocation.setText(currentPosition);
+				currentPosition = (String) msg.obj;
+				//去掉地点后缀'市'
+				if(currentPosition.contains("市")){
+					currentPosition = currentPosition.substring(0, currentPosition.length()-1);
+				}
+				//通过城市名获取城市天气信息
+				Weather.queryWeatherInfo(currentPosition);
 				break;
 			default:
 				break;
@@ -640,6 +775,8 @@ public class MainActivity extends SlidingFragmentActivity implements  android.vi
 		}
 
 	};
+
+
 	
 //	private void updateUi(){
 //		for(int i=0;i<4;i++){

@@ -11,20 +11,28 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.tsz.afinal.FinalBitmap;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
+import com.coolweather.app.activity.WeatherActivity;
 import com.example.fragments.MyScrollView;
 import com.example.addmycar.Const;
 import com.example.bean.LogMessage;
 import com.example.bean.Logs;
 import com.example.bean.User;
+import com.example.loglist.LogAdapter;
+import com.example.newslist.News;
+import com.example.newslist.NewsAdapter;
 import com.example.recharge.Recharge;
+import com.example.recharge.ShowRechageDeatil;
+import com.example.recharge.ShowWalletDeatil;
 import com.example.shanyaocarwash.MainActivity;
 import com.example.shanyaocarwash.R;
 import com.example.web.WebServicePost;
@@ -37,6 +45,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,37 +62,43 @@ import android.view.View;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewStub;
 import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-public class MineFragment extends Fragment implements OnTouchListener, OnGestureListener{
+public class MineFragment extends Fragment implements OnClickListener,OnTouchListener, OnGestureListener{
 
-	private Button recharge;
 	
-	private Button rechargeCard;
 	
-	private int card_price = 0;
+	private Button recharge_bt;
+	private Button wallet_bt;
+	
+	
 	private int washed_num = 0;
 	private int remaining_num = 0;
+	private int card_price = 0;
 	private int remainings = 0;
 	private String userPhone;
 	
-	private TextView cardPrice;
-	private TextView washedNum;
-	private TextView remainingNum;
-	private TextView remainingMon;
+		
+	
 	
 	private ImageView show_pic1;
 	private ImageView show_pic2;
 	private ImageView show_pic3;
 	private ImageView show_pic4;
 	
-	Map<String, String> params = new HashMap<String, String>();
+	
 	
 	Map<String, String> logMap = new HashMap<String, String>();
 	
@@ -93,7 +108,7 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 	private String filePath;
 	private String path;
 	
-	private Logs logs;
+	
 	
 	private ViewFlipper viewFlipper;
 	private boolean showNext = true;
@@ -102,6 +117,7 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 	private final int SHOW_NEXT = 0011;
 	private static final int FLING_MIN_DISTANCE = 50;
 	private static final int FLING_MIN_VELOCITY = 0;
+	protected static final int GET_NEWS = 0;
 	private GestureDetector mGestureDetector;
 	
 	private float x;
@@ -113,13 +129,26 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 	
 	FinalBitmap fb=null;
 	
-	protected static final int GET_MODIFY_SIG = 0;
+	
 	
 	public static TextView mLocation;
 	
+	public static TextView weatherType;
 	
+	public static TextView weatherTemp;
+	
+	public static TextView weatherReminder;
 	
 	private String provider;
+	
+	private RelativeLayout weatherLayout;
+	
+	public static boolean isFromMineFragment = false;
+	
+	private ListView listView;
+	private NewsAdapter adapter;
+	private List<News> dataList = new ArrayList<News>();
+	
 	
     public MineFragment(User user) {
     	card_price = user.getCard_price();
@@ -141,28 +170,15 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tab1, container, false);
         initView(view);
-        initAccount();
-        reCharge(view);
-        reChargeCard(view);
+        isFromMineFragment = true;
         return view;
     }
 
-	private void initAccount() {
-		cardPrice.setText(""+card_price+"元");
-		washedNum.setText(""+washed_num);
-		remainingNum.setText(""+remaining_num);
-		remainingMon.setText(""+remainings);
-	}
 
 	@SuppressWarnings("deprecation")
 	private void initView(View v) {
-		cardPrice = (TextView) v.findViewById(R.id.card_price); 
-		washedNum = (TextView) v.findViewById(R.id.washed_num);
-		remainingNum = (TextView) v.findViewById(R.id.remaining_num); 
-		remainingMon = (TextView) v.findViewById(R.id.remainings);
 		
-		
-		//设置滑动图片
+	//设置滑动图片
 		 	viewFlipper = (ViewFlipper) v.findViewById(R.id.mViewFliper_vf);
 	        mGestureDetector = new GestureDetector(this);	   
 	        viewFlipper.setOnTouchListener(onTouchListener);
@@ -191,15 +207,137 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 	        
 	        //此处显示天气情况，目前是先显示位置信息
 	        mLocation = (TextView) v.findViewById(R.id.show_location);
-	        
+	        weatherTemp = (TextView) v.findViewById(R.id.temp);
+	        weatherType = (TextView) v.findViewById(R.id.show_type);
+	        weatherReminder = (TextView) v.findViewById(R.id.show_reminder);
 	        //在线程中更新天气
 	        Weather weather = new Weather();
 			new Thread(weather).start();
 	        
-	       
+			
+			//获取天气布局的点击事件
+			weatherLayout = (RelativeLayout) v.findViewById(R.id.weather_layout);
+			weatherLayout.setOnClickListener(this);
+			
+			//获取两个按钮的点击事件
+			recharge_bt = (Button) v.findViewById(R.id.recharge_button);
+			wallet_bt = (Button) v.findViewById(R.id.wallet_button);
+			recharge_bt.setOnClickListener(this);
+			wallet_bt.setOnClickListener(this);
+			
+			//设置消息推送listview
+
+			listView = (ListView) v.findViewById(R.id.news_list_view);
+			listView.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					News news = dataList.get(position-1);
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(news.getUrl()));
+					startActivity(intent);
+				}
+			});
+			loadNews();
 	}
 
-	 private void displayRatio_selelct(View v,int id){
+	 private void loadNews() {
+		
+		 path = Const.NEWS_URL;
+			
+			//在子线程中获取服务器的数据  
+	        Thread thread = new Thread(){  
+	            @Override  
+	            public void run() { 
+	                try {  
+	                    URL url = new URL(path);  
+	                    //建立连接  
+	                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();  
+	                    //设置请求方式  
+	                    conn.setRequestMethod("GET");  
+	                    //设置请求超时时间  
+	                    conn.setConnectTimeout(5000);  
+	                    //设置读取超时时间  
+	                    conn.setReadTimeout(5000);  
+	                    //判断是否获取成功  
+	                    if(conn.getResponseCode() == 200)  
+	                    {  
+	                        //获得输入流  
+	                        InputStream is = conn.getInputStream();  
+	                        //解析输入流中的数据  
+	                        dataList = parseXmlInfo(is);
+	                        Message message = new Message();
+	                        message.what = GET_NEWS;
+	                        message.obj = "";
+	                        mHandler.sendMessage(message);
+	                    }  
+	                } catch (Exception e) {  
+	                    // TODO Auto-generated catch block  
+	                    e.printStackTrace();  
+	                }          
+	                
+	            } 
+	        };  
+	          
+	        //启动线程  
+	        thread.start();
+	}
+	 
+	 
+	 protected List<News> parseXmlInfo(InputStream is) {
+			/*我们用pull解析器解析xml文件*/  
+	        
+	        //1.先拿到pull解析器  
+	        XmlPullParser xParser = Xml.newPullParser();  
+	        List<News> newsList = null; 
+	        try {             
+	            xParser.setInput(is, "utf-8");  
+	            //获取事件的类型  
+	            int eventType = xParser.getEventType();  
+	            News news = null;  
+	            newsList = new ArrayList<News>();
+	            while(eventType != XmlPullParser.END_DOCUMENT)  
+	            {  
+	                switch (eventType) {  
+	                case XmlPullParser.START_TAG:  
+
+	                    if ("News".equals(xParser.getName())) {  
+	                        //new出一个news的对象  
+	                        news = new News();  
+	                    }  
+	                    else if ("title".equals(xParser.getName())) {  
+	                        String title = xParser.nextText();  
+	                         news.setTitle(title);  
+	                    }  
+	                    else if ("url".equals(xParser.getName())) {  
+	                        String url = xParser.nextText();  
+	                         news.setUrl(url);  
+	                    }   
+	                    break;  
+	                case XmlPullParser.END_TAG:  
+	                    //当结束时间是logs时，说明一条logs已经解析完成，并且加入到集合中  
+	                    if("News".equals(xParser.getName()))  
+	                    {  
+	                        newsList.add(0,news);  
+	                    }  
+	                    break;  
+	                }  
+	                  
+	                eventType = xParser.next();  
+	            }  
+	            
+	        } catch (Exception e) {  
+	            // TODO Auto-generated catch block  
+	            e.printStackTrace();  
+	        }  
+	        
+	        return newsList;
+		}
+	 
+	 
+
+	private void displayRatio_selelct(View v,int id){
 		int[] ratioId = {R.id.home_ratio_img_04, R.id.home_ratio_img_03, R.id.home_ratio_img_02, R.id.home_ratio_img_01};
 		ImageView img = (ImageView)v.findViewById(ratioId[id]);
 		img.setSelected(true);
@@ -226,158 +364,7 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 				return mGestureDetector.onTouchEvent(event);
 			}
 		};	
-//    private OnTouchListener onTouchListener = new OnTouchListener() {
-//		
-//		@Override
-//		public boolean onTouch(View v, MotionEvent event) {
-//			switch(event.getAction())
-//			{
-//				case MotionEvent.ACTION_DOWN:// 手指按下
-//				{
-//					x = event.getX();// 全局变量，接收按下是的手指坐标
-//				}
-//					break;
-//				case MotionEvent.ACTION_UP:// 手指松开
-//				{
-//					y = event.getX();// 全局变量，接收松开是的手指坐标
-//					// 下面就是简单的逻辑判断，从而区分向左滑、向右滑以及不滑（也就是点击事件）
-//					if (y > x) {
-//						Log.v(null, "result:y>x");
-//						showPreviousView();
-//	
-//					} else if(y < x){
-//						Log.v(null, "result:x>y");
-//						showNextView();
-//					}
-//				}
-//					break;
-//				}              
-//	            return true;
-//			}
-//	};
-	
-	
-	private void reCharge(View view) {
-		recharge = (Button) view.findViewById(R.id.recharge);
-		recharge.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN){
-					recharge.setBackgroundResource(R.drawable.rc_btn_voice_hover);
-					recharge.setTextColor(getResources().getColor(R.color.lightgreen));
-				}else if(event.getAction() == MotionEvent.ACTION_UP){
-					recharge.setBackgroundResource(R.drawable.rc_btn_voice_normal);
-					recharge.setTextColor(getResources().getColor(R.color.green));
-				}
-				return false;
-			}
-		});
-		recharge.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),Recharge.class);
-				intent.putExtra("phone", userPhone);
-				startActivity(intent);	
-			}
-		});
-	}
-	
-	private void reChargeCard(View view) {
-		rechargeCard = (Button) view.findViewById(R.id.recharge_card);
-		rechargeCard.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN){
-					rechargeCard.setBackgroundResource(R.drawable.rc_btn_voice_hover);
-					rechargeCard.setTextColor(getResources().getColor(R.color.lightgreen));
-				}else if(event.getAction() == MotionEvent.ACTION_UP){
-					rechargeCard.setBackgroundResource(R.drawable.rc_btn_voice_normal);
-					rechargeCard.setTextColor(getResources().getColor(R.color.green));
-				}
-				return false;
-			}
-		});
-		rechargeCard.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ensuReCarddialog();		
-			}
 
-			private void ensuReCarddialog() {
-				
-		        //先new出一个dialog监听
-		        DialogInterface.OnClickListener dialogOnclicListener=new DialogInterface.OnClickListener(){  
-		  
-		            @Override  
-		            public void onClick(DialogInterface dialog, int which) {  
-		                switch(which){  
-		                    case Dialog.BUTTON_POSITIVE:   
-		                        sendReqRechargeCardDataBase();
-		                        break;  
-		                    case Dialog.BUTTON_NEGATIVE:  
-		                          dialog.dismiss();
-		                        break;    
-		                }  
-		            }
-
-					private void sendReqRechargeCardDataBase() {
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								String result;
-								try {
-									params.put("type", "modifydatabase");
-									params.put("method", "rechargecard");
-									params.put("phone", userPhone);
-									result = WebServicePost.sendPOSTRequest(RequestPath, params, "utf-8");
-									Message msg = new Message();
-					                msg.what = GET_MODIFY_SIG;
-					                msg.obj = result;
-					                handler.sendMessage(msg);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}).start();	
-					}  
-		        };  
-		        //dialog属性设置
-		        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-		        builder.setTitle("提示"); //设置标题  
-		        builder.setMessage("是否确认冲卡?"); //设置信息  
-		        builder.setPositiveButton("确认",dialogOnclicListener);  
-		        builder.setNegativeButton("取消", dialogOnclicListener);   
-		        builder.create().show();  
-		    }  
-
-	});
-	}
-	
-	private Handler handler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			switch (msg.what) {
-			case GET_MODIFY_SIG:
-				if(msg.obj.equals("modify success")){
-					Toast.makeText(getActivity(), "操作成功", Toast.LENGTH_SHORT).show();
-					logs = LogMessage.packageMessage("rechargeCard","","","");					
-					Logs.writeLogs(logs, filePath);
-					
-				}else if(msg.obj.equals("modify failed")){
-					Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
-				}
-				break;
-			}
-		}
-	};
-	
-	
 	
 	@Override
 	public boolean onDown(MotionEvent e) {
@@ -495,7 +482,13 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 					showPreviousView();
 				}
 				break;
-
+			case GET_NEWS:				
+				adapter = new NewsAdapter(getActivity(),R.layout.news_item,dataList);
+				listView.setAdapter(adapter);
+				listView.setDividerHeight(2);
+				listView.addHeaderView(new ViewStub(getActivity()));
+				listView.addFooterView(new ViewStub(getActivity()));
+				break;
 			default:
 				break;
 			}
@@ -527,6 +520,36 @@ public class MineFragment extends Fragment implements OnTouchListener, OnGesture
 					e.printStackTrace();
 				}
 			}		
+	}
+
+
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+		case R.id.weather_layout:
+			Intent intent = new Intent(getActivity(),WeatherActivity.class);
+			intent.putExtra("city_name", MainActivity.currentPosition);
+			startActivity(intent);
+			break;
+		case R.id.recharge_button:
+			Intent intent1 = new Intent(getActivity(),ShowRechageDeatil.class);
+			intent1.putExtra("phone", userPhone);
+			intent1.putExtra("card_price", card_price);
+			intent1.putExtra("remainings", remainings);
+			intent1.putExtra("filepath", filePath);
+			startActivity(intent1);
+
+			break;
+		case R.id.wallet_button:
+			Intent intent2 = new Intent(getActivity(),ShowWalletDeatil.class);
+			intent2.putExtra("washed_num", washed_num);
+			intent2.putExtra("remaining_num", remaining_num);
+			startActivity(intent2);
+			break;
+		default:
+			break;
+		}
 	}
     
 }

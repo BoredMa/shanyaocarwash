@@ -74,136 +74,94 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/home_date_ratio_ly"
-        android:layout_margin="20dp"
+        android:background="#71C671"
         >
         <TextView 
-            android:id="@+id/show_location"
-            android:layout_width="match_parent"
+            android:id="@+id/temp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:layout_marginLeft="5dp"
             />
+        <RelativeLayout 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@id/temp"
+	        android:layout_marginLeft="15dp"
+            >
+            <TextView 
+	            android:id="@+id/show_location"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="15sp"
+	            android:textColor="#fff"
+            />
+            <TextView 
+	            android:id="@+id/show_type"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/show_location"
+	            android:layout_marginTop="5dp"
+	            android:textSize="15sp"
+	            android:textColor="#fff"
+            />
+            <TextView 
+	            android:id="@+id/show_reminder"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_toRightOf="@id/show_type"
+	            android:layout_marginLeft="55dp"
+	            android:textSize="13sp"
+	            android:textColor="#fff"
+            />
+        </RelativeLayout>
+        
         
     </RelativeLayout>
     
-    
-    <LinearLayout
-        android:id="@+id/price_tag_layout" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/weather_layout"
-        android:orientation="horizontal"
-        >
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="办卡价格(20次):"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            />
-        <TextView
-            android:id="@+id/card_price" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="130dp"
-            android:gravity="center"
-            android:text="500元"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            />
-    </LinearLayout>
-    <ImageView 
-        android:id="@+id/dividedLine"
+    <LinearLayout 
+        android:id="@+id/button_layout" 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divided_line"
-        android:layout_below="@id/price_tag_layout"
-        />
-    <RelativeLayout
-        android:id="@+id/account_table_layout" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dividedLine"
-        android:layout_marginTop="15dp"
+        android:layout_below="@id/weather_layout"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
         >
-        <TableLayout
-	    android:id="@+id/account_table"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-		
-		>
-		    <TableRow >
-		        <TextView 
-		            android:layout_height="wrap_content"
-		            android:text="已洗次数(次):"
-		            android:textSize="20sp"
-		            />
-		        <TextView 
-		            android:id="@+id/washed_num"
-		            android:layout_height="wrap_content"
-		            android:paddingLeft="150dp"
-		            android:text="6"
-		            android:textSize="20sp"
-		            />
-		    </TableRow>
-		    
-		    <TableRow >
-		        <TextView 
-		            android:layout_height="wrap_content"
-		            android:text="剩余次数(次):"
-		            android:textSize="20sp"
-		            />
-		        <TextView 
-		            android:id="@+id/remaining_num"
-		            android:layout_height="wrap_content"
-		            android:paddingLeft="150dp"
-		            android:text="14"
-		            android:textSize="20sp"
-		            />
-		    </TableRow>
-		    
-		    <TableRow >
-		        <TextView 
-		            android:layout_height="wrap_content"
-		            android:text="余额(元):"
-		            android:textSize="20sp"
-		            />
-		        <TextView 
-		            android:id="@+id/remainings"
-		            android:layout_height="wrap_content"
-		            android:paddingLeft="150dp"
-		            android:text="150"
-		            android:textSize="20sp"
-		            />
-		    </TableRow>
-	</TableLayout>
-	
-        <Button
-	    android:id="@+id/recharge_card"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_below="@+id/account_table"
-	    android:layout_marginLeft="23dp"
-	    android:layout_marginTop="48dp"
-	    android:background="@drawable/rc_btn_voice_normal"
-	    android:text="充卡(20次)"
-	    android:textColor="@color/green"
-	    android:textSize="20sp" />
-        
-	<Button 
-        android:id="@+id/recharge"
-        android:layout_width="wrap_content"
+ 	       <Button 
+ 	           android:id="@+id/recharge_button"
+ 	           android:layout_width="wrap_content"
+ 	           android:layout_height="wrap_content"
+ 	           android:layout_marginLeft="50dp"
+ 	           android:text="充值"
+ 	           />
+        	<Button 
+ 	           android:id="@+id/wallet_button"
+ 	           android:layout_width="wrap_content"
+ 	           android:layout_height="wrap_content"
+ 	           android:layout_marginLeft="80dp"
+ 	           android:text="卡包"
+ 	           />
+    </LinearLayout>
+    
+
+    
+   <LinearLayout 
+        android:id="@+id/list_layout" 
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/recharge_card"
-        android:layout_alignBottom="@id/recharge_card"
-        android:layout_marginLeft="70dp"
-        android:background="@drawable/rc_btn_voice_normal"
-        android:text="充值"
-        android:textSize="20sp"
-        android:textColor="@color/green"
-        />
+        android:layout_below="@id/button_layout"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        >
+        <ListView 
+            android:id="@+id/news_list_view"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:divider="@drawable/list_divider"
+	        >            
+        </ListView>
+    </LinearLayout>
 
-	
-
-    </RelativeLayout>
 	
 </RelativeLayout>

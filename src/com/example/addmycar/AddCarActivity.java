@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import com.example.bottommenu.BottomMenu;
 import com.example.bottommenu.ShowBottomMenu;
+import com.example.login.Login;
 import com.example.recharge.Recharge;
 import com.example.shanyaocarwash.R;
 import com.example.web.WebServicePost;
@@ -326,8 +327,8 @@ public class AddCarActivity extends Activity {
 		                    case Dialog.BUTTON_POSITIVE:  
 		                    	//确认车牌不为空
 		                    	String pn = plateNum.getText().toString();
-		                    	if(pn.length() <= 0){
-		                    		Toast.makeText(AddCarActivity.this, "车牌不能为空", Toast.LENGTH_SHORT).show();
+		                    	if(!Login.isPlateNo(pn)){
+		                    		Toast.makeText(AddCarActivity.this, "请填写正确车牌", Toast.LENGTH_SHORT).show();
 		                    		break;
 		                    	}		                    	                    			                    	                    	
 		                    	uploadPic();		                    	
@@ -337,6 +338,8 @@ public class AddCarActivity extends Activity {
 		                        break;    
 		                }  
 		            }
+
+
 
 
 					private void uploadPic() {

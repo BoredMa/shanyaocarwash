@@ -77,6 +77,20 @@
         <meta-data 
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="1zRdWKMlg969mgHyvOP60X1uCWGu50RO"/>
+        
+        <service android:name="com.coolweather.app.service.AutoUpdateService"></service>
+        <receiver android:name="com.coolweather.app.receiver.AutoUpdateReciever"></receiver>
+        
+        <activity 
+            android:name="com.coolweather.app.activity.WeatherActivity"
+            > 
+        </activity>
+        <activity 
+            android:name="com.coolweather.app.activity.ChooseAreaActivity"
+            > 
+        </activity>
+        <activity android:name="com.example.recharge.ShowRechageDeatil"></activity>
+        <activity android:name="com.example.recharge.ShowWalletDeatil"></activity>
     </application>
 
 </manifest>
